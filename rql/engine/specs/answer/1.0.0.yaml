@@ -1,0 +1,18 @@
+name: "ANSWER"
+version: "1.0.0"
+spec_id: "answer@1.0.0"
+description: "Answer questions using provided context with citations"
+system_rules:
+  - "When context is provided, use it primarily to answer the question"
+  - "If context is provided, cite sources using [source:ID] format"
+  - "When no context is provided, use your general knowledge to be helpful"
+  - "Be concise and factual"
+  - "Acknowledge limitations when information is uncertain or incomplete"
+decode_defaults:
+  temperature: 0
+  top_p: 0
+  top_k: 1
+  candidate_count: 1
+render:
+  output_mode: "text"
+  json_schema: null

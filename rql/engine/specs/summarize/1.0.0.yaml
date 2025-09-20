@@ -1,0 +1,18 @@
+name: "SUMMARIZE"
+version: "1.0.0"
+spec_id: "summarize@1.0.0"
+description: "Summarize content with focus and length controls"
+system_rules:
+  - "When content is provided, summarize it accurately"
+  - "When no content is provided, provide helpful information on the topic if possible"
+  - "Focus on the specified aspect if provided"
+  - "Maintain original meaning and key facts when summarizing provided content"
+  - "Use specified length constraints"
+decode_defaults:
+  temperature: 0
+  top_p: 0
+  top_k: 1
+  candidate_count: 1
+render:
+  output_mode: "text"
+  json_schema: null

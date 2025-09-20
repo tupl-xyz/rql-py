@@ -1,0 +1,34 @@
+-- RQL Quickstart Example
+-- This demonstrates core RQL features with Google GenAI and n8n integration
+
+-- Configuration
+SET model = "gemini-2.5-flash";
+SET temperature = 0.1;
+
+-- Source registration
+DEFINE SOURCE gemini TYPE LLM USING {
+    "provider": "google-genai",
+    "model": "gemini-2.5-flash"
+} AS "Primary model";
+
+DEFINE SOURCE retriever TYPE WORKFLOW USING {
+    "kind": "n8n",
+    "webhook": "https://n8n.example.com/webhook/retrieve"
+};
+
+-- Policy definition
+DEFINE POLICY require_citations AS {
+    "input": {"forbid_pii": true},
+    "output": {"require_citations": true, "hallucination_mode": "block_or_ask"}
+};
+
+-- Queries
+SELECT EVIDENCE
+FROM WORKFLOW(source: "retriever", query: "GDPR compliance", k: 5)
+INTO context;
+
+SELECT OUTPUT, EVIDENCE, CONFIDENCE
+FROM LLM(prompt: "Answer using context: {context}")
+WITH temperature = 0.1
+POLICY require_citations
+RETURN JSON;

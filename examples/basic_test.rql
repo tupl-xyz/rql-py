@@ -1,0 +1,21 @@
+-- Basic RQL Test without external dependencies
+
+-- Configuration
+SET model = "gemini-2.5-flash";
+SET temperature = 0.1;
+
+-- Source registration
+DEFINE SOURCE gemini TYPE LLM USING {
+    "provider": "google-genai",
+    "model": "gemini-2.5-flash"
+} AS "Primary model";
+
+-- Policy definition
+DEFINE POLICY test_policy AS {
+    "input": {"forbid_pii": true},
+    "output": {"require_citations": false}
+};
+
+-- Test describe commands
+DESCRIBE SOURCES;
+DESCRIBE POLICIES;

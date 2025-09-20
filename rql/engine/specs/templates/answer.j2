@@ -1,0 +1,23 @@
+Question: {{ question }}
+
+{% if evidence and evidence|length > 0 %}
+Context:
+{% for item in evidence %}
+[source:{{ item.id }}] {{ item.text }}
+{% endfor %}
+
+Answer the question using only the context provided above. You must cite sources using the [source:ID] format.
+{% elif input_text %}
+Context: {{ input_text }}
+
+Answer the question using the context provided above.
+{% else %}
+No specific context provided. Please answer this question based on your general knowledge. Be helpful and informative, but acknowledge if you're unsure about specific details or if the question requires more context to answer accurately.
+{% endif %}
+
+{% if json_schema %}
+Return only valid JSON that strictly matches this schema:
+{{ json_schema | tojson(indent=2) }}
+
+Do not include any explanatory text outside the JSON object. Ensure all strings use double quotes and escape characters as needed.
+{% endif %}

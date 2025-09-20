@@ -1,0 +1,1 @@
+SELECT OUTPUT FROM TASK EXTRACT( input_text: "John Doe", schema: {"type":"object","properties":{"name":{"type":"string"}},"required":["name"]} ) RETURN JSON;

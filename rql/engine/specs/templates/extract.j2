@@ -1,0 +1,19 @@
+{% if evidence and evidence|length > 0 %}
+Text to extract from:
+{% for item in evidence %}
+{{ item.text }}
+{% endfor %}
+{% elif input_text %}
+Text: {{ input_text }}
+{% else %}
+No specific text provided for extraction. If you can provide reasonable example data or if this is a request to show what the schema would look like with sample data, please do so.
+{% endif %}
+
+Extract information according to this JSON schema:
+{{ schema | tojson(indent=2) }}
+
+{% if input_text or (evidence and evidence|length > 0) %}
+Return only valid JSON matching this exact schema. Use null for missing information.
+{% else %}
+Return valid JSON matching the schema. If no specific text was provided, you may use example/placeholder data that demonstrates the schema structure, or return null values for all fields if no reasonable extraction can be made.
+{% endif %}

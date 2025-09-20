@@ -1,0 +1,83 @@
+?start: stmt_list
+
+stmt_list: (statement ";")+
+
+?statement: set_stmt
+          | define_source
+          | define_policy
+          | select_stmt
+          | describe_stmt
+
+# Keep existing statements unchanged
+set_stmt: "SET" NAME "=" literal
+define_source: "DEFINE" "SOURCE" NAME "TYPE" NAME "USING" json ("AS" string)?
+define_policy: "DEFINE" "POLICY" NAME "AS" json
+describe_stmt: "DESCRIBE" describe_target
+describe_target: "SOURCES"  -> desc_sources
+              | "POLICIES" -> desc_policies
+
+# NEW: SELECT statement - task-based only, no legacy support
+select_stmt: "SELECT" select_items "FROM" task_invocation [with_clause] [policy_clause] [determinism_clause] [return_clause] [into_clause]
+
+# NEW: Task invocation (only way to execute - no prompts allowed)
+task_invocation: "TASK" task_name "(" [task_args] ")"
+
+# NEW: Canonical task names (deterministic, versioned)
+task_name: "ANSWER"     -> task_answer
+        | "SUMMARIZE"   -> task_summarize
+        | "EXTRACT"     -> task_extract
+
+# NEW: Task arguments (structured parameters only)
+task_args: task_arg ("," task_arg)*
+task_arg: NAME ":" literal              // Basic parameters (question, focus, etc.)
+        | "context" ":" ref_call        // Context via REF
+        | "input_ref" ":" ref_call      // Input reference
+        | "text_ref" ":" ref_call       // Text reference
+        | "schema" ":" object           // JSON schema for EXTRACT
+
+# NEW: Reference calls for deterministic retrieval
+ref_call: "REF" "(" NAME "," object ")"
+
+# NEW: Determinism requirement clause (optional, defaults to provider)
+determinism_clause: "REQUIRE" "DETERMINISM" determinism_level
+determinism_level: "provider" -> det_provider
+                | "strong"   -> det_strong
+
+# ENHANCED: WITH clause - supports dotted notation for decode params
+with_clause: "WITH" with_kv ("," with_kv)*
+with_kv: dotted_name "=" literal
+dotted_name: NAME ("." NAME)*           // Support decode.temperature, decode.top_p, etc.
+
+# EXISTING: Keep current clauses
+select_items: select_item ("," select_item)*
+select_item: "OUTPUT"     -> sel_output
+           | "EVIDENCE"   -> sel_evidence
+           | "CONFIDENCE" -> sel_confidence
+           | "*"          -> sel_star
+
+policy_clause: "POLICY" (NAME | json)
+return_clause: "RETURN" return_format
+return_format: "JSON"     -> json_format
+            | "TEXT"     -> text_format
+            | "MARKDOWN" -> markdown_format
+into_clause: "INTO" NAME
+
+# EXISTING: Keep current literal and JSON support
+true: "true"
+false: "false"
+null: "null"
+
+?literal: string | SIGNED_NUMBER | true | false | null | json
+string: ESCAPED_STRING
+json: object
+object: "{" [pair ("," pair)*] "}"
+pair: string ":" value
+?value: string | SIGNED_NUMBER | true | false | null | object | array
+array: "[" [value ("," value)*] "]"
+
+%import common.ESCAPED_STRING
+%import common.SIGNED_NUMBER
+%import common.CNAME -> NAME
+%import common.WS
+%ignore WS
+%ignore /--[^\n]*/   // line comment

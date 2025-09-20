@@ -1,0 +1,35 @@
+{% if evidence and evidence|length > 0 %}
+Content to summarize:
+{% for item in evidence %}
+{{ item.text }}
+{% endfor %}
+{% elif input_text %}
+Text: {{ input_text }}
+{% else %}
+No specific text provided to summarize. If this is a request to summarize a general topic or concept, please provide a helpful summary based on your knowledge.
+{% endif %}
+
+{% if focus %}
+Focus your summary on: {{ focus }}
+{% endif %}
+
+{% if length %}
+Length: {{ length }}
+{% if length == "short" %} (1-2 sentences)
+{% elif length == "medium" %} (1 paragraph)
+{% elif length == "long" %} (2-3 paragraphs)
+{% endif %}
+{% endif %}
+
+{% if input_text or (evidence and evidence|length > 0) %}
+Provide an accurate summary maintaining the original meaning and key facts.
+{% else %}
+If you can infer what should be summarized from the context, provide a helpful summary. Otherwise, explain what information you would need to provide a useful summary.
+{% endif %}
+
+{% if json_schema %}
+Return only valid JSON matching this schema:
+{{ json_schema | tojson(indent=2) }}
+
+Output must be strictly JSON with double quotes and no trailing commentary.
+{% endif %}
