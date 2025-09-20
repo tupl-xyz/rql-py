@@ -1,6 +1,6 @@
-# RQL (Retrieval Query Language)
+# RQL (Reasoning Query Language)
 
-A minimal CLI application for AI-powered data retrieval and processing using Google GenAI.
+A minimal CLI application for AI-powered reasoning and data retrieval using Google GenAI.
 
 ## Quick Start
 
