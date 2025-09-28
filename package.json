@@ -1,0 +1,32 @@
+{
+  "name": "rql-py",
+  "version": "0.1.0",
+  "description": "NPM wrapper that installs the Python RQL CLI (creates an isolated venv and exposes `rql`).",
+  "license": "MIT",
+  "private": false,
+  "bin": {
+    "rql": "bin/rql.js"
+  },
+  "scripts": {
+    "postinstall": "node scripts/postinstall.js"
+  },
+  "files": [
+    "bin",
+    "scripts",
+    "rql",
+    "pyproject.toml",
+    "README.md"
+  ],
+  "os": ["darwin", "linux", "win32"],
+  "engines": {
+    "node": ">=16"
+  },
+  "keywords": [
+    "rql",
+    "retrieval",
+    "ai",
+    "cli",
+    "python",
+    "tupl"
+  ]
+}

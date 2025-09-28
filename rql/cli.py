@@ -199,7 +199,13 @@ def init() -> None:
 @app.command()
 def version() -> None:
     """Show RQL version information."""
-    console.print("RQL (Retrieval Query Language) v0.2.0")
+    try:
+        from importlib.metadata import version as _v
+
+        ver = _v("rql")
+    except Exception:
+        ver = "unknown"
+    console.print(f"RQL (Retrieval Query Language) v{ver}")
     console.print("A weekend prototype implementation")
 
 

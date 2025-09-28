@@ -6,6 +6,14 @@ A minimal CLI application for AI-powered reasoning and data retrieval using Goog
 
 ### Installation
 
+Install via npm (creates an isolated Python venv inside the package and exposes the `rql` CLI):
+
+```bash
+npm install -g rql-py
+```
+
+Or install directly with pip for Python-only environments:
+
 ```bash
 # Clone the repository
 git clone <repository-url>
